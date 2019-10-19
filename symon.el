@@ -451,6 +451,28 @@ supoprted in PLIST:
                       (/ (- tx symon-linux--last-network-tx) symon-refresh-rate 1000))
                (setq symon-linux--last-network-tx tx)))))
 
+(defcustom symon-temperature-upper-bound 60
+  "upper-bound of sparkline for temperature."
+  :group 'symon)
+
+(defcustom symon-temperature-lower-bound 25
+  "lower-bound of sparkline for temperature."
+  :group 'symon)
+
+(defun temperature-status-function ()
+  "get system temperature (linux)"
+  (/ (string-to-number
+      (string-trim
+       (shell-command-to-string "cat /sys/devices/platform/coretemp.0/hwmon/hwmon2/temp1_input")))
+     1000))
+
+(define-symon-monitor symon-linux-temperature-monitor
+  :index "♨:" :unit "℃" :sparkline t
+  :upper-bound symon-temperature-upper-bound
+  :lower-bound symon-temperature-lower-bound
+  :fetch (when temperature-status-function
+           (read (cdr (assoc ?p (funcall temperature-status-function))))))
+
 ;;   + darwin monitors
 
 (defun symon-darwin--maybe-start-process ()
@@ -522,6 +544,13 @@ done" symon-refresh-rate)))
   :index "BAT:" :unit "%" :sparkline t
   :fetch (when battery-status-function
            (read (cdr (assoc ?p (funcall battery-status-function))))))
+
+(define-symon-monitor symon-darwin-temperature-monitor
+  :index "♨:" :unit "℃" :sparkline t
+  :upper-bound 60
+  :lower-bound 28
+  :fetch (when temperature-status-function
+           (read (cdr (assoc ?p (funcall temperature-status-function))))))
 
 ;;   + windows monitors
 
