@@ -472,7 +472,7 @@ supoprted in PLIST:
   :upper-bound symon-temperature-upper-bound
   :lower-bound symon-temperature-lower-bound
   :fetch (when temperature-status-function
-           (read (cdr (assoc ?p (funcall temperature-status-function))))))
+           (temperature-status-function)))
 
   (define-symon-monitor symon-linux-temp-monitor
   :index "♨:" :unit "℃" :sparkline t
