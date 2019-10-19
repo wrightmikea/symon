@@ -460,6 +460,7 @@ supoprted in PLIST:
   :group 'symon)
 
 (defun temperature-status-function ()
+  (interactive)
   "get system temperature (linux)"
   (/ (string-to-number
       (string-trim
@@ -472,6 +473,12 @@ supoprted in PLIST:
   :lower-bound symon-temperature-lower-bound
   :fetch (when temperature-status-function
            (read (cdr (assoc ?p (funcall temperature-status-function))))))
+
+  (define-symon-monitor symon-linux-temp-monitor
+  :index "♨:" :unit "℃" :sparkline t
+  :upper-bound 60
+  :lower-bound 28
+  :fetch (/ (string-to-number (string-trim (shell-command-to-string "cat /sys/devices/platform/coretemp.0/hwmon/hwmon2/temp1_input"))) 1000))
 
 ;;   + darwin monitors
 
