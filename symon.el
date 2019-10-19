@@ -381,7 +381,7 @@ supoprted in PLIST:
 (defvar symon-linux--last-cpu-ticks nil)
 
 (define-symon-monitor symon-linux-cpu-monitor
-  :index "CPU:" :unit "%" :sparkline t
+  :index "Cpu:" :unit "%" :sparkline t
   :setup (setq symon-linux--last-cpu-ticks nil)
   :fetch (cl-destructuring-bind (cpu)
              (symon-linux--read-lines
@@ -395,7 +395,7 @@ supoprted in PLIST:
                (setq symon-linux--last-cpu-ticks (cons total idle))))))
 
 (define-symon-monitor symon-linux-memory-monitor
-  :index "MEM:" :unit "%" :sparkline t
+  :index "Mem:" :unit "%" :sparkline t
   :fetch (cl-destructuring-bind (memtotal memavailable memfree buffers cached)
              (symon-linux--read-lines
               "/proc/meminfo" (lambda (str) (and str (read str)))
@@ -410,14 +410,14 @@ supoprted in PLIST:
                   (unless (zerop swapped) (format "%dMB Swapped" swapped)))))
 
 (define-symon-monitor symon-linux-battery-monitor
-  :index "BAT:" :unit "%" :sparkline t
+  :index "Bat:" :unit "%" :sparkline t
   :fetch (when battery-status-function
            (read (cdr (assoc ?p (funcall battery-status-function))))))
 
 (defvar symon-linux--last-network-rx nil)
 
 (define-symon-monitor symon-linux-network-rx-monitor
-  :index "RX:" :unit "KB/s" :sparkline t
+  :index "Rx:" :unit "KB/s" :sparkline t
   :upper-bound symon-network-rx-upper-bound
   :lower-bound symon-network-rx-lower-bound
   :setup (setq symon-linux--last-network-rx nil)
@@ -435,7 +435,7 @@ supoprted in PLIST:
 (defvar symon-linux--last-network-tx nil)
 
 (define-symon-monitor symon-linux-network-tx-monitor
-  :index "TX:" :unit "KB/s" :sparkline t
+  :index "Tx:" :unit "KB/s" :sparkline t
   :upper-bound symon-network-tx-upper-bound
   :lower-bound symon-network-tx-lower-bound
   :setup (setq symon-linux--last-network-tx nil)
@@ -499,13 +499,13 @@ while true; do
 done" symon-refresh-rate)))
 
 (define-symon-monitor symon-darwin-cpu-monitor
-  :index "CPU:" :unit "%" :sparkline t
+  :index "Cpu:" :unit "%" :sparkline t
   :setup (symon-darwin--maybe-start-process)
-  :cleanup (symon--maybe-kill-process)
-  :fetch (symon--read-value-from-process-buffer "cpu"))
+  :cleanup) (symon--maybe-kill-process)
+:fetch (symon--read-value-from-process-buffer "cpu")
 
 (define-symon-monitor symon-darwin-memory-monitor
-  :index "MEM:" :unit "%" :sparkline t
+  :index "Mem:" :unit "%" :sparkline t
   :setup (symon-darwin--maybe-start-process)
   :cleanup (symon--maybe-kill-process)
   :fetch (symon--read-value-from-process-buffer "mem"))
@@ -513,7 +513,7 @@ done" symon-refresh-rate)))
 (defvar symon-darwin--last-network-rx nil)
 
 (define-symon-monitor symon-darwin-network-rx-monitor
-  :index "RX:" :unit "KB/s" :sparkline t
+  :index "Rx:" :unit "KB/s" :sparkline t
   :upper-bound symon-network-rx-upper-bound
   :lower-bound symon-network-rx-lower-bound
   :setup (progn
@@ -528,7 +528,7 @@ done" symon-refresh-rate)))
 (defvar symon-darwin--last-network-tx nil)
 
 (define-symon-monitor symon-darwin-network-tx-monitor
-  :index "TX:" :unit "KB/s" :sparkline t
+  :index "Tx:" :unit "KB/s" :sparkline t
   :upper-bound symon-network-tx-upper-bound
   :lower-bound symon-network-tx-lower-bound
   :setup (progn
@@ -541,7 +541,7 @@ done" symon-refresh-rate)))
              (setq symon-darwin--last-network-tx tx))))
 
 (define-symon-monitor symon-darwin-battery-monitor
-  :index "BAT:" :unit "%" :sparkline t
+  :index "Bat:" :unit "%" :sparkline t
   :fetch (when battery-status-function
            (read (cdr (assoc ?p (funcall battery-status-function))))))
 
@@ -592,26 +592,26 @@ while(1)                                                            \
 }" symon-refresh-rate)))
 
 (define-symon-monitor symon-windows-cpu-monitor
-  :index "CPU:" :unit "%" :sparkline t
+  :index "Cpu:" :unit "%" :sparkline t
   :setup (symon-windows--maybe-start-wmi-process)
   :cleanup (symon--maybe-kill-process)
   :fetch (symon--read-value-from-process-buffer "cpu"))
 
 (define-symon-monitor symon-windows-memory-monitor
-  :index "MEM:" :unit "%" :sparkline t
+  :index "Mem:" :unit "%" :sparkline t
   :setup (symon-windows--maybe-start-wmi-process)
   :cleanup (symon--maybe-kill-process)
   :fetch (symon--read-value-from-process-buffer "mem"))
 
 (define-symon-monitor symon-windows-page-file-monitor
-  :index "PF:" :unit "MB" :sparkline t
+  :index "Pf:" :unit "MB" :sparkline t
   :upper-bound symon-windows-page-file-upper-bound
   :setup (symon-windows--maybe-start-wmi-process)
   :cleanup (symon--maybe-kill-process)
   :fetch (symon--read-value-from-process-buffer "swap"))
 
 (define-symon-monitor symon-windows-battery-monitor
-  :index "BAT:" :unit "%" :sparkline t
+  :index "Bat:" :unit "%" :sparkline t
   :setup (symon-windows--maybe-start-wmi-process)
   :cleanup (symon--maybe-kill-process)
   :fetch (symon--read-value-from-process-buffer "bat"))
@@ -619,7 +619,7 @@ while(1)                                                            \
 (defvar symon-windows--last-network-rx nil)
 
 (define-symon-monitor symon-windows-network-rx-monitor
-  :index "RX:" :unit "KB/s" :sparkline t
+  :index "Rx:" :unit "KB/s" :sparkline t
   :upper-bound symon-network-rx-upper-bound
   :lower-bound symon-network-rx-lower-bound
   :setup (progn
@@ -634,7 +634,7 @@ while(1)                                                            \
 (defvar symon-windows--last-network-tx nil)
 
 (define-symon-monitor symon-windows-network-tx-monitor
-  :index "TX:" :unit "KB/s" :sparkline t
+  :index "Tx:" :unit "KB/s" :sparkline t
   :upper-bound symon-network-tx-upper-bound
   :lower-bound symon-network-tx-lower-bound
   :setup (progn
