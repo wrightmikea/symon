@@ -474,11 +474,11 @@ supoprted in PLIST:
   :fetch (when temperature-status-function
            (temperature-status-function)))
 
-  (define-symon-monitor symon-linux-temp-monitor
-  :index "♨:" :unit "℃" :sparkline t
-  :upper-bound 60
-  :lower-bound 28
-  :fetch (/ (string-to-number (string-trim (shell-command-to-string "cat /sys/devices/platform/coretemp.0/hwmon/hwmon2/temp1_input"))) 1000))
+  ;; (define-symon-monitor symon-linux-temp-monitor
+  ;; :index "♨:" :unit "℃" :sparkline t
+  ;; :upper-bound 60
+  ;; :lower-bound 28
+  ;; :fetch (/ (string-to-number (string-trim (shell-command-to-string "cat /sys/devices/platform/coretemp.0/hwmon/hwmon2/temp1_input"))) 1000))
 
 ;;   + darwin monitors
 
